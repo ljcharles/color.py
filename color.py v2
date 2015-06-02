@@ -1,0 +1,55 @@
+# !\usr\bin\env python
+# -*- coding: UTF-8 -*-
+
+#importer des modules
+import sys, re
+
+##############################
+# Mettre un terme dans une   #
+# tranche en couleur         #
+# -------------------------  #
+# Créé : le 28/05/2015       #
+# Auteur : Freshloic         #
+# Tuteur : Mr BYRAM Miguel   #
+##############################
+
+"""
+procédure à lancer
+début: recherche term2find au sein de file2lookinto
+fin: affiche term2find dans les tranches en couleur
+"""
+BEGIN_COLOR="\033[1;33m"
+END_COLOR="\033[m"
+
+def color(term2find, tranche):
+    
+    result = ""
+    
+    noregterm=re.escape(term2find)
+    print "___ "+noregterm
+    
+    mot = r"^(.*?)("+noregterm+")(.*)$(?ms)"
+    
+    ismot = re.search(mot,str(tranche))
+    
+    while ismot:
+        result+= ismot.group(1) + BEGIN_COLOR + ismot.group(2) + END_COLOR
+         
+        tranche = str(ismot.group(3))
+        ismot = re.search(mot,tranche)
+                
+    return result+tranche
+
+      
+    
+if __name__ == "__main__":
+    try:
+        term2find = sys.argv[1]
+    except:
+        print "Indiquez le terme à rechercher"
+        sys.exit(2)
+        
+    tranche = """2015-05-11 10:33:39.719664|INFO |bscsresponder:12|bscsresponder|
+    11494391|BSCS responder received a POSITIVE ACK"""
+        
+    print color(term2find, tranche)
